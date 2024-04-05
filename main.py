@@ -19,4 +19,13 @@ async def root(request: Request):
 @app.post("/")
 async def solve_equation(request: Request, equation: str = Form(...)) -> RedirectResponse:
     print(equation)
+    parser(equation)
     return RedirectResponse("http://127.0.0.1:8000", status_code=status.HTTP_303_SEE_OTHER)
+
+
+def parser(equation: str):
+    nb_terme = 1
+    for i in range(len(equation)):
+        if equation[i] == '+' or equation[i] == '-':
+            nb_terme += 1
+    print(nb_terme)
