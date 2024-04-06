@@ -25,6 +25,11 @@ class TestTerme(unittest.TestCase):
         b = Terme(2,"x", 2)
         self.assertEqual(a*b, Terme(10,"x",3))
 
+    def test_multiply_different_terms(self):
+        a = Terme(5, "x", 1)
+        b = Terme(2, "y", 2)
+        self.assertEqual(a*b, Terme(10,"xy", 3))
+
     def test_division_terme(self):
         a = Terme(4,"x",1)
         b = Terme(2,"x", 2)
