@@ -127,7 +127,7 @@ def simplifier_immediatement(expression_input):
     return False
 
 # Definition de la fonction de simplification. Se contente de simplifier l'expression, et de la retourner, voila tout.
-def simplifier(expression_input):
+def simplifier(expression):
     
     enter = True
     nouvelleExpression = expression

@@ -5,6 +5,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import string
 from terme import Terme
+from operations import Somme, Div, Mult
+from simplifier import simplifier
 
 alphabets = list(string.ascii_letters)
 
@@ -51,14 +53,13 @@ def parser(equation: str):
 
 def parservalex(equation: str):
     equalite = equation.split("=")
-    print(equalite)
     termelist=[]
     equation = regler_les_moin(equalite[0])
     for stringterme in equation.split("+"):
         if "*" in stringterme:
             terme1 = findterme(stringterme.split("*")[0])
             terme2 = findterme(stringterme.split("*")[1])
-            termelist.append(terme1*terme2)
+            termelist.append(Mult[terme1,terme2])
         else:
             termelist.append(findterme(stringterme))
     termelist2=[]
@@ -69,14 +70,12 @@ def parservalex(equation: str):
             terme1.coefficient = -terme1.coefficient
             terme2 = findterme(stringterm2.split("*")[1])
             terme2.coefficient = -terme2.coefficient
-            termelist2.append(terme1*terme2)
+            termelist2.append(Mult[terme1,terme2])
         else:
             a = findterme(stringterm2)
             a.coefficient = -a.coefficient
             termelist.append(a)
-
-
-    print(termelist2)
+    print(simplifier(Somme(termelist)))
 
 def findterme(stringterme:str):
         inconnue= None
