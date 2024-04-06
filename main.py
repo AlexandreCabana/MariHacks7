@@ -22,12 +22,11 @@ async def root(request: Request):
 @app.post("/")
 async def solve_equation(request: Request, equation: str = Form(...)) -> RedirectResponse:
     print(equation)
-    parser(equation)
+    parservalex(equation)
     return RedirectResponse("http://127.0.0.1:8000", status_code=status.HTTP_303_SEE_OTHER)
 
 
 def parser(equation: str):
-    nb_terme = 1
     #equation_parser = [Terme(3,"x",1)]
     terme = ""
     equation = list(equation)
@@ -55,3 +54,24 @@ def parser(equation: str):
     print(terme)
     print(nb_terme)
     Terme(int(degree), inconnue, int(coefficient))
+
+def parservalex(equation: str):
+    termelist=[]
+    for stringterme in equation.split("+"):
+        termelist.append(findterme(stringterme))
+    print(termelist)
+
+def findterme(stringterme):
+        inconnue= None
+        degre = None
+        for letter in alphabets:
+            if letter in stringterme:
+                inconnue = letter
+        if '^' in stringterme:
+            degre = "".join(stringterme[stringterme.index('{')+1 : stringterme.index('}')])
+        if inconnue is None and degre is None:
+            return Terme(int(stringterme),"",0)
+        elif degre is None:
+            return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,1)
+        else:
+            return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,degre)
