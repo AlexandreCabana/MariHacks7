@@ -9,6 +9,10 @@ def simplifier_immediatement(expression_input):
         # Copier expression_input. (On n'est jamais trop sur!)
         expression = Somme(expression_input.exprs[:])
 
+        # S'il n'y a qu'un element, le retourner.
+        if len(expression.exprs) == 1:
+            return expression.exprs[0]
+
         # Utiliser la regle d'associativite.
         for terme in range(len(expression.exprs)):
             if isinstance(expression.exprs[terme], Somme):
@@ -21,49 +25,40 @@ def simplifier_immediatement(expression_input):
                 return expression
 
         # Evaluer des valeurs si possible, en premier en notant tous les termes, en deuxieme en essayant d'additionner les termes.
-        aRajouter = []
         termes = []
+        termeIndexes = []
         for terme in range(len(expression.exprs)):
             if isinstance(expression.exprs[terme], Terme):
-                termes.append(terme)
+                termeIndexes.append(terme)
 
-        termesBackup = termes[:]
+        for terme in termeIndexes:
+            termes.append(expression.exprs[terme])
 
-        while len(termes) > 1:
-            
-            termesAdditionnes = []
-            somme = Terme(0, "x", 0)
-            for terme in range(len(termes)):
-                
-                nouvelleSomme = somme + expression.exprs[termes[terme]]
-                if nouvelleSomme:
-                    somme = nouvelleSomme
-                    termesAdditionnes.append(terme)
+        for terme in termeIndexes[::-1]:
+            expression.exprs.pop(terme)
+        
+        termebydegree={}
+        for terme in termes:
+            if terme.degre in termebydegree:
+                termebydegree[terme.degre] += terme
+            else:
+                termebydegree[terme.degre] = terme
 
-            for terme in termesAdditionnes[::-1]:
-                termes.pop(terme)
+        expression.exprs += termebydegree.values()
 
-            aRajouter.append(somme)
+        if len(termebydegree) < len(termeIndexes):
 
-        if len(aRajouter) < len(termesBackup):
-
-            if termes:
-                aRajouter.append(expression.exprs[termes[0]])
-
-            for terme in termesBackup[::-1]:
-                expression.exprs.pop(terme)
-
-            for terme in aRajouter:
-                expression.exprs.append(terme)
-
-            # On a fait une etape, on retourne.
+            # On a fait une etape, on termine.
             return expression
-
 
     if isinstance(expression_input, Mult):
 
         # Copier expression_input. (On n'est jamais trop sur!)
         expression = Mult(expression_input.exprs[:])
+
+        # S'il n'y a qu'un element, le retourner.
+        if len(expression.exprs) == 1:
+            return expression.exprs[0]
 
         # Utiliser la regle d'associativite.
         for terme in range(len(expression.exprs)):
@@ -132,22 +127,31 @@ def simplifier_immediatement(expression_input):
     return False
 
 # Definition de la fonction de simplification. Se contente de simplifier l'expression, et de la retourner, voila tout.
-def simplifier(expression):
-
-    firstEnter = True
+def simplifier(expression_input):
+    
+    enter = True
     nouvelleExpression = expression
-    while nouvelleExpression != expression or firstEnter:
+    while nouvelleExpression != expression or enter:
 
-        firstEnter = False
+        enter = False
         expression = nouvelleExpression
 
-        while nouvelleExpression != False:
+        while False != nouvelleExpression:
             expression = nouvelleExpression
             nouvelleExpression = simplifier_immediatement(expression)
 
+            if nouvelleExpression != False:
+                enter = True
+
         nouvelleExpression = expression
 
-        for terme in range(len(expression)):
-            nouvelleExpression[terme] = simplifier(nouvelleExpression[terme])
+        if isinstance(expression, Somme) or isinstance(expression, Mult):
+            for terme in range(len(expression.exprs)):
+                nouvelleExpression.exprs[terme] = simplifier(nouvelleExpression.exprs[terme])
+
+        elif isinstance(expression, Div):
+            nouvelleExpression.num = simplifier(nouvelleExpression.num)
+            nouvelleExpression.denom = simplifier(nouvelleExpression.denom)
 
     return nouvelleExpression
+
