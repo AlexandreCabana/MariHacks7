@@ -14,6 +14,9 @@ class Fraction:
             self.desimplify(multiplier/self.denominator)
             other.desimplify(multiplier/other.denominator)
             return Fraction(self.numerator + other.numerator, self.denominator)
+    def __sub__(self, other):
+        other.numerator = -other.numerator
+        return self + other
 
     def __mul__(self, other):
         if isinstance(other, Fraction):
@@ -23,7 +26,7 @@ class Fraction:
 
     def __truediv__(self, other):
         if isinstance(other, Fraction):
-            return Fraction(self.numerator / other.numerator, self.denominator / other.denominator)
+            return Fraction(self.numerator * other.denominator, self.denominator * other.numerator).simplify()
         elif isinstance(other, int):
             return Fraction(self.numerator / other, self.denominator / other)
 

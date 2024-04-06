@@ -48,6 +48,43 @@ class TestFraction(unittest.TestCase):
     def test_add_fraction_with_different_denominator(self):
         self.assertEqual(Fraction(1,4) + Fraction(1,2), Fraction(3,4))
 
+    def test_multiply_fraction(self):
+        self.assertEqual(Fraction(1,4)*Fraction(1, 2), Fraction(1,8))
+
+    def test_divide_fraction(self):
+        self.assertEqual(Fraction(1,4)/Fraction(1, 2), Fraction(1,2))
+
+class TestFractionsandTerme(unittest.TestCase):
+    def test_sum_terme(self):
+        a = Terme(Fraction(4,3), "x", 1)
+        b = Terme(Fraction(2), "x", 1)
+        self.assertEqual(a + b, Terme(Fraction(10,3), "x", 1))
+
+    def test_sum_multiple_terms(self):
+        a = Terme(Fraction(2,5), "x", 1)
+        b = Terme(Fraction(20,5), "x", 1)
+        c = Terme(Fraction(3), "x", 1)
+        self.assertEqual(a + b + c, Terme(Fraction(37,5), "x", 1))
+
+    def test_subtract_terme(self):
+        a = Terme(Fraction(1,2), "x", 1)
+        b = Terme(Fraction(1,4), "x", 1)
+        self.assertEqual(a - b, Terme(Fraction(1,4), "x", 1))
+
+    def test_multiply_terme(self):
+        a = Terme(Fraction(3,4), "x", 1)
+        b = Terme(Fraction(1,8), "x", 2)
+        self.assertEqual(a * b, Terme(Fraction(3,32), "x", 3))
+
+    def test_multiply_different_terms(self):
+        a = Terme(Fraction(2,3), "x", 1)
+        b = Terme(Fraction(1,5), "y", 2)
+        self.assertEqual(a * b, Terme(Fraction(2,15), "xy", 3))
+
+    def test_division_terme(self):
+        a = Terme(Fraction(1,2), "x", 1)
+        b = Terme(Fraction(1,4), "x", 2)
+        self.assertEqual(a / b, Terme(Fraction(2,1), "x", -1))
 class TestSolver(unittest.TestCase):
     def testsolverdegreeone(self):
         solver = Solver()
