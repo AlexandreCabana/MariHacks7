@@ -13,14 +13,15 @@ alphabets = list(string.ascii_letters)
 
 templates = Jinja2Templates(directory="html")
 app = FastAPI()
-
+ANSWER = ""
 app.mount("/css", StaticFiles(directory="css"), name="css")
 #app.mount("/Image", StaticFiles(directory="Image"), name="Image")
 
 
 @app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    print(ANSWER)
+    return templates.TemplateResponse("index.html", {"request": request,"answer": ANSWER})
 
 @app.post("/")
 async def solve_equation(request: Request, equation: str = Form(...)) -> RedirectResponse:
@@ -53,6 +54,7 @@ def parser(equation: str):
     Terme(int(degree), inconnue, int(coefficient))
 
 def parservalex(equation: str):
+    equation = removespace(equation)
     equalite = equation.split("=")
     termelist=[]
     equation = regler_les_moin(equalite[0])
@@ -76,8 +78,8 @@ def parservalex(equation: str):
             a = findterme(stringterm2)
             a.coefficient = -a.coefficient
             termelist.append(a)
-    print(termelist)
-    print(Solver().solve(simplifier(Somme(termelist))))
+    global ANSWER
+    ANSWER = Solver().solve(simplifier(Somme(termelist)))
 
 def findterme(stringterme:str):
         inconnue= None
@@ -108,9 +110,14 @@ def regler_les_moin(equation:str)->str:
         equation = list(equation)
         ans = equation.copy()
         for index, value in enumerate(equation):
-            if value == "-":
+            if value == "-" and index != 0:
                 ans.insert(index + ofsset, "+")
                 ofsset += 1
 
         equation = "".join(ans)
         return equation
+
+def removespace(string:str)->str:
+    if " " in string:
+        return removespace(string.replace(" ",""))
+    return string
