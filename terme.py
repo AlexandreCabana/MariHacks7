@@ -27,6 +27,4 @@ class Terme:
         return f'Coefficient: {self.coefficient}, inconnue: {self.inconnue}, degree: {self.degre}'
 
     def __eq__(self, other):
-        if isinstance(other, Terme):
-            return self.coefficient == other.coefficient and self.inconnue == other.inconnue and self.degre == other.degre
-        return False
+        return self.coefficient == other.coefficient and self.inconnue == other.inconnue and self.degre == other.degre

@@ -20,40 +20,42 @@ def enlever_divisions(expr1, expr2):
 
         else:
             noDivs = True
-            
+
             if not isinstance(expr1, Terme):
                 for terme in range(len(expr1.exprs)):
                     if isinstance(expr1.exprs[terme], Div) and noDivs:
 
                         noDivs = False
-                        
+
                         temp = expr1.exprs[:]
                         temp.pop(terme)
 
                         expr2 = Somme([expr2, Mult([Terme(-1, "x", 0), Somme(temp)])])
                         expr2 = Mult([expr2, expr1.exprs[terme].denom])
-                        
+
                         expr1 = expr1.exprs[terme].num
 
-            
+
             if not isinstance(expr2, Terme):
                 for terme in range(len(expr2.exprs)):
                     if isinstance(expr2.exprs[terme], Div) and noDivs:
 
                         noDivs = False
-                        
+
                         temp = expr2.exprs[:]
                         temp.pop(terme)
 
                         expr1 = Somme([expr1, Mult([Terme(-1, "x", 0), Somme(temp)])])
                         expr1 = Mult([expr1, expr2.exprs[terme].denom])
-                        
+
                         expr2 = expr1.exprs[terme].num
-            
+
             if noDivs:
                 break
 
     return (expr1, expr2)
 
-
-
+def tout_meme_bord_simplifier(expr1, expr2):
+    expr1 = Somme([expr1, Mult([Terme(-1, "x", 0), expr2])])
+    expr1Simple = simplifier(expr1)
+    return expr1Simple
