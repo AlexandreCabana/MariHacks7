@@ -1,4 +1,5 @@
 from math import sqrt
+from terme import Terme
 
 
 class Solver:
@@ -16,9 +17,13 @@ class Solver:
     def sortequationbydegre(self):
         expression = []
         for i in range(self.degre, -1, -1):
+            found=False
             for j in self.expression:
                 if j.degre == i:
                     expression.append(j)
+                    found=True
+            if not found:
+                expression.append(Terme(0,self.expression[-1].inconnue, i))
         self.expression = expression
 
     def solvedegreoneequation(self):
@@ -27,4 +32,8 @@ class Solver:
         a = self.expression[0].coefficient
         b = self.expression[1].coefficient
         c = self.expression[2].coefficient
-        return (b+sqrt((b**2-4*a*c))/(2*a),(b-sqrt(b**2-4*a*c))/(2*a))
+        print(self.expression)
+        print(a, b, c)
+        if ((b**2-4*a*c)<=0):
+            return None
+        return (-b+sqrt(b**2-4*a*c))/(2*a),(-b-sqrt(b**2-4*a*c))/(2*a)

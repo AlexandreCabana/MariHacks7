@@ -20,6 +20,7 @@ app.mount("/css", StaticFiles(directory="css"), name="css")
 
 @app.get("/")
 async def root(request: Request):
+    print(ANSWER)
     return templates.TemplateResponse("index.html", {"request": request,"answer": ANSWER})
 
 @app.post("/")
@@ -53,6 +54,7 @@ def parser(equation: str):
     Terme(int(degree), inconnue, int(coefficient))
 
 def parservalex(equation: str):
+    equation = removespace(equation)
     equalite = equation.split("=")
     termelist=[]
     equation = regler_les_moin(equalite[0])
@@ -108,9 +110,14 @@ def regler_les_moin(equation:str)->str:
         equation = list(equation)
         ans = equation.copy()
         for index, value in enumerate(equation):
-            if value == "-":
+            if value == "-" and index != 0:
                 ans.insert(index + ofsset, "+")
                 ofsset += 1
 
         equation = "".join(ans)
         return equation
+
+def removespace(string:str)->str:
+    if " " in string:
+        return removespace(string.replace(" ",""))
+    return string
