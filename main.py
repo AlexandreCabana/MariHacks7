@@ -13,14 +13,14 @@ alphabets = list(string.ascii_letters)
 
 templates = Jinja2Templates(directory="html")
 app = FastAPI()
-
+ANSWER = ""
 app.mount("/css", StaticFiles(directory="css"), name="css")
 #app.mount("/Image", StaticFiles(directory="Image"), name="Image")
 
 
 @app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request,"answer": ANSWER})
 
 @app.post("/")
 async def solve_equation(request: Request, equation: str = Form(...)) -> RedirectResponse:
@@ -76,8 +76,8 @@ def parservalex(equation: str):
             a = findterme(stringterm2)
             a.coefficient = -a.coefficient
             termelist.append(a)
-    print(termelist)
-    print(Solver().solve(simplifier(Somme(termelist))))
+    global ANSWER
+    ANSWER = Solver().solve(simplifier(Somme(termelist)))
 
 def findterme(stringterme:str):
         inconnue= None
