@@ -21,7 +21,6 @@ async def root(request: Request):
 
 @app.post("/")
 async def solve_equation(request: Request, equation: str = Form(...)) -> RedirectResponse:
-    print(equation)
     parservalex(equation)
     return RedirectResponse("http://127.0.0.1:8000", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -48,16 +47,13 @@ def parser(equation: str):
     if inconnue == '':
         degree = 0
     coefficient = "".join(terme[0:terme.index(inconnue)])
-    print(inconnue)
-    print(degree)
-    print(coefficient)
-    print(terme)
-    print(nb_terme)
     Terme(int(degree), inconnue, int(coefficient))
 
 def parservalex(equation: str):
+    equalite = equation.split("=")
+    print(equalite)
     termelist=[]
-    equation = regler_les_moin(equation)
+    equation = regler_les_moin(equalite[0])
     for stringterme in equation.split("+"):
         if "*" in stringterme:
             terme1 = findterme(stringterme.split("*")[0])
@@ -65,10 +61,24 @@ def parservalex(equation: str):
             termelist.append(terme1*terme2)
         else:
             termelist.append(findterme(stringterme))
+    termelist2=[]
+    equalite = regler_les_moin(equalite[1])
+    for stringterm2 in equalite.split("+"):
+        if "*" in stringterme:
+            terme1 = findterme(stringterm2.split("*")[0])
+            terme1.coefficient = -terme1.coefficient
+            terme2 = findterme(stringterm2.split("*")[1])
+            terme2.coefficient = -terme2.coefficient
+            termelist2.append(terme1*terme2)
+        else:
+            a = findterme(stringterm2)
+            a.coefficient = -a.coefficient
+            termelist.append(a)
 
-    print(termelist)
 
-def findterme(stringterme):
+    print(termelist2)
+
+def findterme(stringterme:str):
         inconnue= None
         degre = None
         for letter in alphabets:
@@ -84,7 +94,6 @@ def findterme(stringterme):
             return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,degre)
 
 def regler_les_moin(equation:str)->str:
-        print(equation.index('-'))
         ofsset = 0
         equation = list(equation)
         ans = equation.copy()
@@ -94,5 +103,4 @@ def regler_les_moin(equation:str)->str:
                 ofsset += 1
 
         equation = "".join(ans)
-        print(equation)
         return equation
