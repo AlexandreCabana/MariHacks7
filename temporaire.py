@@ -1,4 +1,4 @@
-# TODO: Ajouter la simplification en evaluant la somme/multiplication de termes dans simplifier_immediatement.
+# Ajouter la simplification en evaluant la somme/multiplication de termes dans simplifier_immediatement.
 
 def simplifier(expression):
 
