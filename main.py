@@ -7,6 +7,7 @@ import string
 from terme import Terme
 from operations import Somme, Div, Mult
 from simplifier import simplifier
+from solver import Solver
 
 alphabets = list(string.ascii_letters)
 
@@ -75,7 +76,8 @@ def parservalex(equation: str):
             a = findterme(stringterm2)
             a.coefficient = -a.coefficient
             termelist.append(a)
-    print(simplifier(Somme(termelist)))
+    print(termelist)
+    print(Solver().solve(simplifier(Somme(termelist))))
 
 def findterme(stringterme:str):
         inconnue= None
@@ -84,7 +86,7 @@ def findterme(stringterme:str):
             if letter in stringterme:
                 inconnue = letter
         if '^' in stringterme:
-            degre = "".join(stringterme[stringterme.index('{')+1 : stringterme.index('}')])
+            degre = int("".join(stringterme[stringterme.index('{')+1 : stringterme.index('}')]))
         if inconnue is None and degre is None:
             return Terme(int(stringterme),"",0)
         elif degre is None:
