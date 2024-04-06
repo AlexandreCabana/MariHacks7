@@ -57,6 +57,7 @@ def parser(equation: str):
 
 def parservalex(equation: str):
     termelist=[]
+    equation = regler_les_moin(equation)
     for stringterme in equation.split("+"):
         if "*" in stringterme:
             terme1 = findterme(stringterme.split("*")[0])
@@ -64,6 +65,7 @@ def parservalex(equation: str):
             termelist.append(terme1*terme2)
         else:
             termelist.append(findterme(stringterme))
+
     print(termelist)
 
 def findterme(stringterme):
@@ -80,3 +82,17 @@ def findterme(stringterme):
             return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,1)
         else:
             return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,degre)
+
+def regler_les_moin(equation:str)->str:
+        print(equation.index('-'))
+        ofsset = 0
+        equation = list(equation)
+        ans = equation.copy()
+        for index, value in enumerate(equation):
+            if value == "-":
+                ans.insert(index + ofsset, "+")
+                ofsset += 1
+
+        equation = "".join(ans)
+        print(equation)
+        return equation
