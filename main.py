@@ -58,7 +58,12 @@ def parser(equation: str):
 def parservalex(equation: str):
     termelist=[]
     for stringterme in equation.split("+"):
-        termelist.append(findterme(stringterme))
+        if "*" in stringterme:
+            terme1 = findterme(stringterme.split("*")[0])
+            terme2 = findterme(stringterme.split("*")[1])
+            termelist.append(terme1*terme2)
+        else:
+            termelist.append(findterme(stringterme))
     print(termelist)
 
 def findterme(stringterme):
