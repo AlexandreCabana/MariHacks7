@@ -86,13 +86,22 @@ def findterme(stringterme:str):
             if letter in stringterme:
                 inconnue = letter
         if '^' in stringterme:
-            degre = int("".join(stringterme[stringterme.index('{')+1 : stringterme.index('}')]))
+            if "{" in stringterme:
+                degre = int("".join(stringterme[stringterme.index('{')+1 : stringterme.index('}')]))
+            else:
+                degre = int(stringterme[stringterme.index('^')+1])
         if inconnue is None and degre is None:
             return Terme(int(stringterme),"",0)
         elif degre is None:
-            return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,1)
+            try:
+                return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,1)
+            except Exception:
+                return Terme(1, inconnue, 1)
         else:
-            return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,degre)
+            try:
+                return Terme(int(stringterme[0:stringterme.index(inconnue)]),inconnue,degre)
+            except Exception:
+                return Terme(1, inconnue, degre)
 
 def regler_les_moin(equation:str)->str:
         ofsset = 0
